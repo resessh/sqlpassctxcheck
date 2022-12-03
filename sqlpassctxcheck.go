@@ -26,14 +26,14 @@ func run(pass *analysis.Pass) (interface{}, error) {
 							if funxobjdecltype, ok := funxobjdecl.Type.(*ast.StarExpr); ok {
 								if funxobjdecltypex, ok := funxobjdecltype.X.(*ast.SelectorExpr); ok {
 									if funxobjdecltypexx, ok := funxobjdecltypex.X.(*ast.Ident); ok {
-										var sqlModuleOfReceiver SqlPackage
-										if funxobjdecltypexx.Name == sqlModuleAlias[SQL] {
-											sqlModuleOfReceiver = SQL
-										} else if funxobjdecltypexx.Name == sqlModuleAlias[SQLX] {
-											sqlModuleOfReceiver = SQLX
+										var sqlModuleOfReceiver sqlPackage
+										if funxobjdecltypexx.Name == sqlModuleAlias[sql] {
+											sqlModuleOfReceiver = sql
+										} else if funxobjdecltypexx.Name == sqlModuleAlias[sqlx] {
+											sqlModuleOfReceiver = sqlx
 										}
 
-										if restricted, ok := SqlModuleRestrictedMethodMap[sqlModuleOfReceiver].Get(funxobjdecltypex.Sel.Name, fun.Sel.Name); ok {
+										if restricted, ok := sqlModuleRestrictedMethodMap[sqlModuleOfReceiver].get(funxobjdecltypex.Sel.Name, fun.Sel.Name); ok {
 											pass.Report(analysis.Diagnostic{
 												Pos: call.Pos(),
 												End: call.End(),
@@ -61,12 +61,12 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
-type sqlModuleAliasMap map[SqlPackage]string
+type sqlModuleAliasMap map[sqlPackage]string
 
 func getSqlModuleAlias(file *ast.File) sqlModuleAliasMap {
 	sqlModuleAlias := sqlModuleAliasMap{
-		SQL:  "sql",
-		SQLX: "sqlx",
+		sql:  "sql",
+		sqlx: "sqlx",
 	}
 
 	for _, decl := range file.Decls {
@@ -75,7 +75,7 @@ func getSqlModuleAlias(file *ast.File) sqlModuleAliasMap {
 				if importSpec, ok := spec.(*ast.ImportSpec); ok {
 					for _, sqlPackage := range allSqlPackage {
 						if importSpec.Name != nil &&
-							importSpec.Path.Value == SqlModuleImportPathMap[sqlPackage] {
+							importSpec.Path.Value == sqlModuleImportPathMap[sqlPackage] {
 							sqlModuleAlias[sqlPackage] = importSpec.Name.Name
 						}
 					}

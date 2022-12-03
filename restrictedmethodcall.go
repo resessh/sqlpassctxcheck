@@ -1,14 +1,14 @@
 package sqlpassctxcheck
 
-type RestrictedMethodCall struct {
+type restrictedMethodCall struct {
 	ReceiverType        string
 	MethodName          string
 	AlternateMethodName string
 }
 
-type RestrictedMethodCallList []RestrictedMethodCall
+type restrictedMethodCallList []restrictedMethodCall
 
-func (r RestrictedMethodCallList) Get(receiverType, methodName string) (*RestrictedMethodCall, bool) {
+func (r restrictedMethodCallList) get(receiverType, methodName string) (*restrictedMethodCall, bool) {
 	for _, restrictedMethodCall := range r {
 		if restrictedMethodCall.ReceiverType == receiverType &&
 			restrictedMethodCall.MethodName == methodName {
@@ -18,8 +18,8 @@ func (r RestrictedMethodCallList) Get(receiverType, methodName string) (*Restric
 	return nil, false
 }
 
-var SqlModuleRestrictedMethodMap = map[SqlPackage]RestrictedMethodCallList{
-	SQL: {
+var sqlModuleRestrictedMethodMap = map[sqlPackage]restrictedMethodCallList{
+	sql: {
 		{
 			ReceiverType:        "DB",
 			MethodName:          "Begin",
@@ -91,7 +91,7 @@ var SqlModuleRestrictedMethodMap = map[SqlPackage]RestrictedMethodCallList{
 			AlternateMethodName: "StmtContext",
 		},
 	},
-	SQLX: {
+	sqlx: {
 		{
 			ReceiverType:        "DB",
 			MethodName:          "Beginx",

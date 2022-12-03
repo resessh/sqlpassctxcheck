@@ -1,18 +1,18 @@
 package sqlpassctxcheck
 
-type SqlPackage string
+type sqlPackage string
 
 const (
-	SQL  SqlPackage = "database/sql"
-	SQLX SqlPackage = "github.com/jmoiron/sqlx"
+	sql  sqlPackage = "database/sql"
+	sqlx sqlPackage = "github.com/jmoiron/sqlx"
 )
 
-var allSqlPackage = []SqlPackage{
-	SQL,
-	SQLX,
+var allSqlPackage = []sqlPackage{
+	sql,
+	sqlx,
 }
 
-var SqlModuleImportPathMap = map[SqlPackage]string{
-	SQL:  `"database/sql"`,
-	SQLX: `"github.com/jmoiron/sqlx"`,
+var sqlModuleImportPathMap = map[sqlPackage]string{
+	sql:  `"database/sql"`,
+	sqlx: `"github.com/jmoiron/sqlx"`,
 }
