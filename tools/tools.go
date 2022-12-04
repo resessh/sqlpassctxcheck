@@ -1,6 +1,5 @@
 package tools
 
 import (
-	_ "golang.org/x/sys/unix"
-	_ "golang.org/x/text"
+	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 )

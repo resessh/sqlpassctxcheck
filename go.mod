@@ -5,8 +5,6 @@ go 1.19
 require (
 	github.com/golangci/golangci-lint v1.50.1
 	github.com/gostaticanalysis/testutil v0.4.0
-	golang.org/x/sys v0.1.0
-	golang.org/x/text v0.3.8
 	golang.org/x/tools v0.2.0
 )
 
@@ -170,6 +168,8 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20220827204233-334a2380cb91 // indirect
 	golang.org/x/mod v0.6.0 // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
