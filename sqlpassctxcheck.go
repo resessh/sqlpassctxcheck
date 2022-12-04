@@ -22,31 +22,33 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			if call, ok := n.(*ast.CallExpr); ok {
 				if fun, ok := call.Fun.(*ast.SelectorExpr); ok {
 					if funx, ok := fun.X.(*ast.Ident); ok {
-						if funxobjdecl, ok := funx.Obj.Decl.(*ast.Field); ok {
-							if funxobjdecltype, ok := funxobjdecl.Type.(*ast.StarExpr); ok {
-								if funxobjdecltypex, ok := funxobjdecltype.X.(*ast.SelectorExpr); ok {
-									if funxobjdecltypexx, ok := funxobjdecltypex.X.(*ast.Ident); ok {
-										var sqlModuleOfReceiver sqlPackage
-										if funxobjdecltypexx.Name == sqlModuleAlias[sql] {
-											sqlModuleOfReceiver = sql
-										} else if funxobjdecltypexx.Name == sqlModuleAlias[sqlx] {
-											sqlModuleOfReceiver = sqlx
-										}
+						if funx.Obj != nil {
+							if funxobjdecl, ok := funx.Obj.Decl.(*ast.Field); ok {
+								if funxobjdecltype, ok := funxobjdecl.Type.(*ast.StarExpr); ok {
+									if funxobjdecltypex, ok := funxobjdecltype.X.(*ast.SelectorExpr); ok {
+										if funxobjdecltypexx, ok := funxobjdecltypex.X.(*ast.Ident); ok {
+											var sqlModuleOfReceiver sqlPackage
+											if funxobjdecltypexx.Name == sqlModuleAlias[sql] {
+												sqlModuleOfReceiver = sql
+											} else if funxobjdecltypexx.Name == sqlModuleAlias[sqlx] {
+												sqlModuleOfReceiver = sqlx
+											}
 
-										if restricted, ok := sqlModuleRestrictedMethodMap[sqlModuleOfReceiver].get(funxobjdecltypex.Sel.Name, fun.Sel.Name); ok {
-											pass.Report(analysis.Diagnostic{
-												Pos: call.Pos(),
-												End: call.End(),
-												Message: fmt.Sprintf(
-													"use (*%s.%s).%s instead of (*%s.%s).%s",
-													sqlModuleAlias[sqlModuleOfReceiver],
-													restricted.ReceiverType,
-													restricted.AlternateMethodName,
-													sqlModuleAlias[sqlModuleOfReceiver],
-													restricted.ReceiverType,
-													restricted.MethodName,
-												),
-											})
+											if restricted, ok := sqlModuleRestrictedMethodMap[sqlModuleOfReceiver].get(funxobjdecltypex.Sel.Name, fun.Sel.Name); ok {
+												pass.Report(analysis.Diagnostic{
+													Pos: call.Pos(),
+													End: call.End(),
+													Message: fmt.Sprintf(
+														"use (*%s.%s).%s instead of (*%s.%s).%s",
+														sqlModuleAlias[sqlModuleOfReceiver],
+														restricted.ReceiverType,
+														restricted.AlternateMethodName,
+														sqlModuleAlias[sqlModuleOfReceiver],
+														restricted.ReceiverType,
+														restricted.MethodName,
+													),
+												})
+											}
 										}
 									}
 								}
